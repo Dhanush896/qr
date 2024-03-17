@@ -1,5 +1,6 @@
 streamlit
 pandas
+zbar
 qrcode
 cryptography
 Pillow
