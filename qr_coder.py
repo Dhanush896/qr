@@ -3,9 +3,9 @@ import pandas as pd
 import qrcode
 from cryptography.fernet import Fernet
 from PIL import Image
+from pyzbar.pyzbar import decode
 import os
 import base64
-
 
 # Function to encrypt data and generate QR codes
 def encrypt_and_generate_qr(df, save_path):
@@ -48,28 +48,19 @@ def encrypt_and_generate_qr(df, save_path):
     img_key.save(img_key_path)  # Save encryption key QR code as PNG
     
     return img_encrypted_path, img_key_path
-import streamlit as st
-import pandas as pd
-import qrcode
-from cryptography.fernet import Fernet
-from PIL import Image
-import os
-import base64
-import cv2
 
 # Function to decrypt encrypted data and generate a new QR code image
 def decrypt_and_generate_qr(encrypted_data_qr_path, encryption_key_qr_path, save_path):
     # Read QR code image containing encryption key
-    key_image = cv2.imread(encryption_key_qr_path, cv2.IMREAD_GRAYSCALE)
-    qr_key_detector = cv2.QRCodeDetector()
-    _, key_data, _ = qr_key_detector.detectAndDecodeMulti(key_image)
+    qr_key_data = decode(Image.open(encryption_key_qr_path))[0].data
+    key_data = qr_key_data.decode()
 
     # Create a Fernet cipher using the encryption key
     cipher = Fernet(key_data)
 
     # Read QR code image containing encrypted data
-    encrypted_image = cv2.imread(encrypted_data_qr_path, cv2.IMREAD_GRAYSCALE)
-    _, encrypted_data, _ = qr_key_detector.detectAndDecodeMulti(encrypted_image)
+    qr_encrypted_data = decode(Image.open(encrypted_data_qr_path))[0].data
+    encrypted_data = qr_encrypted_data.decode()
 
     # Decrypt the encrypted data
     decrypted_data = cipher.decrypt(encrypted_data.encode()).decode()
