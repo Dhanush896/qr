@@ -1,6 +1,6 @@
 streamlit
 pandas
-https://github.com/NaturalHistoryMuseum/zbar-python-patched/releases/download/v0.10/zbar-0.10-cp27-none-win_win32.whl
+zbar-py
 qrcode
 cryptography
 Pillow
